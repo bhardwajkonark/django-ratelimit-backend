@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
-
+import secrets
 from django.conf import settings
 from django.test.runner import DiscoverRunner
 from django.utils.functional import empty
@@ -11,6 +11,8 @@ def setup_test_environment():
     # reset settings
     settings._wrapped = empty
 
+    secret =  secrets.token_urlsafe(50)
+    
     apps = [
         'django.contrib.sessions',
         'django.contrib.auth',
@@ -22,6 +24,7 @@ def setup_test_environment():
         'tests',
     ]
     settings_dict = {
+        "SECRET_KEY" : secret,
         "DATABASES": {
             'default': {
                 'ENGINE': "django.db.backends.sqlite3",
@@ -68,6 +71,7 @@ def setup_test_environment():
                 ),
                 'context_processors': (
                     'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages'
                 ),
             },
         }],
